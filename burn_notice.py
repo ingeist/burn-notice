@@ -8,16 +8,17 @@ import serial
 import numpy as np
 from time import sleep,time
 from crontab import CronTab
+from twilio.rest import Client
 
 port = "/dev/ttyACM0"
-
-
 ser = serial.Serial(port,2400,timeout = 0.050)
 ser.baudrate=9600
 
 # p.timestep is also number of minutes to wait/sleep
 
-
+account_sid = 'AC68a2bcc0ff6ae71e0de4af571af95f34'
+auth_token = '91fde8b8831f0ef947015eb13223d164'
+client = Client(account_sid, auth_token)
 
 UV_INDEX = { 0: 800000,
              1: 60,
@@ -67,6 +68,14 @@ class ProtectionLevel(object):
 if __name__=='__main__':
     data = UVLevel()
     p = ProtectionLevel(data, 1, 0.1) # data, spf, timestep
+    
+    message = client.messages.create(
+        body = 'This is the ship that made the Kessel run in fourteen parsecs?',
+        from_ ='+12056515230',
+        to='+14039701456'
+    )
+    print(message.sid)
+
         
     while (1==1):
         raw = ser.readline() # looks like b'0\r\n'

@@ -2,6 +2,7 @@ import serial
 import numpy as np
 from time import sleep,time
 from crontab import CronTab
+import math
 
 port = "/dev/ttyACM0"
 
@@ -22,10 +23,10 @@ while (1==1):
    string_n = raw.decode()
    string = string_n.rstrip()
    # if needed convert to float with flt = float(string) but check to make sure it's not nothing
-   if (len(string)!=0) and (len(string)<2):
+   if (len(string)!=0) and (string!='VEML6070 Test'):
        integer = int(string)
        
-       print(integer)
+       print(math.ceil(integer/100))
        
    #sleep(sleepmin*60)  # sleeps for number of minutes
    sleep(1)

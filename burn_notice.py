@@ -9,6 +9,7 @@ import numpy as np
 from time import sleep,time
 from crontab import CronTab
 from twilio.rest import Client
+import math
 
 port = "/dev/ttyACM0"
 ser = serial.Serial(port,2400,timeout = 0.050)
@@ -16,9 +17,9 @@ ser.baudrate=9600
 
 # p.timestep is also number of minutes to wait/sleep
 
-account_sid = ''
-auth_token = ''
-client = Client(account_sid, auth_token)
+#account_sid = ''
+#auth_token = ''
+#client = Client(account_sid, auth_token)
 
 UV_INDEX = { 0: 800000,
              1: 60,
@@ -29,7 +30,17 @@ UV_INDEX = { 0: 800000,
              6: 30,
              7: 20,
              8: 20,
-             9: 15}
+             9: 15,
+             10:15,
+             11:15,
+             12:10,
+             13:10,
+             14:10}
+
+# UV index Today, March 8th, 2020 Vancouover is 1; max reading of our sensor was 726. 
+# -> try to calibrate max measurement to max UV index, so sensor: 800 ~ UV index:1?
+# -> sensor: 0 ~ UV index: 0, sensor: 800 will approximate to UV index 8 for general proof of concept
+
 
 class UVLevel(object):
     def __init__(self):
@@ -82,9 +93,9 @@ if __name__=='__main__':
         string_n = raw.decode()
         string = string_n.rstrip()
         # if needed convert to float with flt = float(string) but check to make sure it's not nothing
-        if (len(string)!=0) and (len(string)<2):
+        if (len(string)!=0) and (string!='VEML6070 Test'):
             integer = int(string)
-            data.uv_level = integer # 
+            data.uv_level = math.ceil(integer/100) # divide by 100 to normalize reading 800 to UV index 8
             print(p.protection_level) 
             with open('demo/plot.dat','a') as f:
                 f.write(str(i)+'\t'+str(p.protection_level)+'\n')

@@ -4,9 +4,23 @@
 # reapply sunscreen
 
 ## UV information source: https://www.researchgate.net/profile/Thomas_Frei3/publication/288523666_UV-Index_for_the_Public/links/569d4f9908ae16fdf0796d77/UV-Index-for-the-Public.pdf
+import serial
+import numpy as np
+from time import sleep,time
+from crontab import CronTab
+
+port = "/dev/ttyACM0"
 
 
-UV_INDEX = { 1: 60,
+ser = serial.Serial(port,2400,timeout = 0.050)
+ser.baudrate=9600
+
+# p.timestep is also number of minutes to wait/sleep
+
+
+
+UV_INDEX = { 0: 800000,
+             1: 60,
              2: 60,
              3: 60,
              4: 30, 
@@ -52,9 +66,18 @@ class ProtectionLevel(object):
 
 if __name__=='__main__':
     data = UVLevel()
-    p = ProtectionLevel(data, 15, 15)
-    print(p.protection_level)
+    p = ProtectionLevel(data, 1, 0.1) # data, spf, timestep
+        
+    while (1==1):
+        raw = ser.readline() # looks like b'0\r\n'
+        string_n = raw.decode()
+        string = string_n.rstrip()
+        # if needed convert to float with flt = float(string) but check to make sure it's not nothing
+        if (string != ''):
+            integer = int(string)
+            data.uv_level = integer # 
+            print(p.protection_level) 
 
-    for i in range(1,8):
-        data.uv_level = i
-        print("silly goose: %s " % p.protection_level)
+        sleep(p.timestep)  # sleeps for number of minutes
+        
+

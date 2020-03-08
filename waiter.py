@@ -22,5 +22,10 @@ while (1==1):
    string_n = raw.decode()
    string = string_n.rstrip()
    # if needed convert to float with flt = float(string) but check to make sure it's not nothing
-   print(string)
-   sleep(sleepmin*60)  # sleeps for number of minutes
+   if (string != ''):
+       integer = int(string)
+       
+       print(integer)
+       
+   #sleep(sleepmin*60)  # sleeps for number of minutes
+   sleep(1)

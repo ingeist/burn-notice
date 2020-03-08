@@ -9,47 +9,17 @@ import numpy as np
 from time import sleep,time
 from crontab import CronTab
 from twilio.rest import Client
-<<<<<<< HEAD
 import math
-=======
-import os
-from flask import Flask, request, redirect
-from twilio.twiml.messaging_response import MessagingResponse
-import sys
-import argparse
->>>>>>> 81e6c6bece3ce9254a642a97d8028d1e68f749a5
 
-#port = "/dev/ttyACM0"
-#ser = serial.Serial(port,2400,timeout = 0.050)
-#ser.baudrate=9600
+port = "/dev/ttyACM0"
+ser = serial.Serial(port,2400,timeout = 0.050)
+ser.baudrate=9600
 
 # p.timestep is also number of minutes to wait/sleep
 
-<<<<<<< HEAD
 #account_sid = ''
 #auth_token = ''
 #client = Client(account_sid, auth_token)
-=======
-account_sid = os.environ['TWILIO_ACCOUNT_SID']
-auth_token = os.environ['TWILIO_AUTH_TOKEN']
-client = Client(account_sid, auth_token)
->>>>>>> 81e6c6bece3ce9254a642a97d8028d1e68f749a5
-
-app= Flask(__name__)
-app.config.from_object(__name__)
-
-callers = {
-    "+14039701456": "Suliat"
-}
-
-body = ''
-
-@app.route("/sms", methods=['GET', 'POST'])
-def sms_ahoy_reply():
-
-    resp = MessagingResponse()
-    resp.message("Time to reapply sunscreen? Is this executing?")
-    return str(resp)
 
 UV_INDEX = { 0: 800000,
              1: 60,
@@ -106,39 +76,10 @@ class ProtectionLevel(object):
             new_prot = self._new_protection_level(self.user_spf, uv_level, self.protection_level)
             self.protection_level =  new_prot
 
-
-if __name__=="__main__":
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("spf")
-    parser.add_argument("timestep")
-    args = parser.parse_args()
-    
+if __name__=='__main__':
     data = UVLevel()
-    p = ProtectionLevel(data, args.spf, args.timestep) # data, spf, timestep
-    i = 0
-    while(i <2):
-        sleep(10)
-        i= i+1
+    p = ProtectionLevel(data, 1, 0.1) # data, spf, timestep
     
-    message = client.messages.create(
-        body = 'Time to reapply sunscreen!',
-        from_ ='+12056515230',
-        to='+14039701456'
-    )
-    print(message.sid)
-            
-    #    while (1==1):
-    #        raw = ser.readline() # looks like b'0\r\n'
-    #        string_n = raw.decode()
-    #        string = string_n.rstrip()
-    #        # if needed convert to float with flt = float(string) but check to make sure it's not nothing
-    #        if (string != ''):
-    #            integer = int(string)
-    #            data.uv_level = integer # 
-    #            print(p.protection_level) 
-    #
-    #        sleep(p.timestep)  # sleeps for number of minutes
     #message = client.messages.create(
         #body = 'This is the ship that made the Kessel run in fourteen parsecs?',
         #from_ ='+12056515230',

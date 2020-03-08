@@ -9,15 +9,15 @@ import numpy as np
 from time import sleep,time
 from crontab import CronTab
 from twilio.rest import Client
-<<<<<<< HEAD
+
 import math
-=======
+
 import os
 from flask import Flask, request, redirect
 from twilio.twiml.messaging_response import MessagingResponse
 import sys
 import argparse
->>>>>>> 81e6c6bece3ce9254a642a97d8028d1e68f749a5
+
 
 #port = "/dev/ttyACM0"
 #ser = serial.Serial(port,2400,timeout = 0.050)
@@ -25,15 +25,15 @@ import argparse
 
 # p.timestep is also number of minutes to wait/sleep
 
-<<<<<<< HEAD
+
 #account_sid = ''
 #auth_token = ''
 #client = Client(account_sid, auth_token)
-=======
+
 account_sid = os.environ['TWILIO_ACCOUNT_SID']
 auth_token = os.environ['TWILIO_AUTH_TOKEN']
 client = Client(account_sid, auth_token)
->>>>>>> 81e6c6bece3ce9254a642a97d8028d1e68f749a5
+
 
 app= Flask(__name__)
 app.config.from_object(__name__)
@@ -116,10 +116,27 @@ if __name__=="__main__":
     
     data = UVLevel()
     p = ProtectionLevel(data, args.spf, args.timestep) # data, spf, timestep
-    i = 0
-    while(i <2):
-        sleep(10)
-        i= i+1
+
+    
+    
+    i=1 # start index at 1 for data file
+    while (1==1):
+        raw = ser.readline() # looks like b'0\r\n'
+        string_n = raw.decode()
+        string = string_n.rstrip()
+        # if needed convert to float with flt = float(string) but check to make sure it's not nothing
+        if (len(string)!=0) and (string!='VEML6070 Test'):
+            integer = int(string)
+            data.uv_level = math.ceil(integer/100) # divide by 100 to normalize reading 800 to UV index 8
+            print(p.protection_level) 
+            with open('demo/plot.dat','a') as f:
+                f.write(str(i)+'\t'+str(p.protection_level)+'\n')
+                i+=1
+
+        sleep(p.timestep)  # sleeps for number of minutes
+        if(string==0):
+            break
+
     
     message = client.messages.create(
         body = 'Time to reapply sunscreen!',
@@ -146,20 +163,6 @@ if __name__=="__main__":
     #)
     #print(message.sid)
 
-    i=1 # start index at 1 for data file
-    while (1==1):
-        raw = ser.readline() # looks like b'0\r\n'
-        string_n = raw.decode()
-        string = string_n.rstrip()
-        # if needed convert to float with flt = float(string) but check to make sure it's not nothing
-        if (len(string)!=0) and (string!='VEML6070 Test'):
-            integer = int(string)
-            data.uv_level = math.ceil(integer/100) # divide by 100 to normalize reading 800 to UV index 8
-            print(p.protection_level) 
-            with open('demo/plot.dat','a') as f:
-                f.write(str(i)+'\t'+str(p.protection_level)+'\n')
-                i+=1
 
-        sleep(p.timestep)  # sleeps for number of minutes
         
 

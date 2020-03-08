@@ -69,23 +69,26 @@ if __name__=='__main__':
     data = UVLevel()
     p = ProtectionLevel(data, 1, 0.1) # data, spf, timestep
     
-    message = client.messages.create(
-        body = 'This is the ship that made the Kessel run in fourteen parsecs?',
-        from_ ='+12056515230',
-        to='+14039701456'
-    )
-    print(message.sid)
+    #message = client.messages.create(
+        #body = 'This is the ship that made the Kessel run in fourteen parsecs?',
+        #from_ ='+12056515230',
+        #to='+14039701456'
+    #)
+    #print(message.sid)
 
-        
+    i=1 # start index at 1 for data file
     while (1==1):
         raw = ser.readline() # looks like b'0\r\n'
         string_n = raw.decode()
         string = string_n.rstrip()
         # if needed convert to float with flt = float(string) but check to make sure it's not nothing
-        if (string != ''):
+        if (len(string)!=0) and (len(string)<2):
             integer = int(string)
             data.uv_level = integer # 
             print(p.protection_level) 
+            with open('demo/plot.dat','a') as f:
+                f.write(str(i)+'\t'+str(p.protection_level)+'\n')
+                i+=1
 
         sleep(p.timestep)  # sleeps for number of minutes
         

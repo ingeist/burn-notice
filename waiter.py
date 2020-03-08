@@ -22,7 +22,7 @@ while (1==1):
    string_n = raw.decode()
    string = string_n.rstrip()
    # if needed convert to float with flt = float(string) but check to make sure it's not nothing
-   if (string != ''):
+   if (len(string)!=0) and (len(string)<2):
        integer = int(string)
        
        print(integer)

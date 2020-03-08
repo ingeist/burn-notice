@@ -16,8 +16,8 @@ ser.baudrate=9600
 
 # p.timestep is also number of minutes to wait/sleep
 
-account_sid = 'AC68a2bcc0ff6ae71e0de4af571af95f34'
-auth_token = '91fde8b8831f0ef947015eb13223d164'
+account_sid = ''
+auth_token = ''
 client = Client(account_sid, auth_token)
 
 UV_INDEX = { 0: 800000,
